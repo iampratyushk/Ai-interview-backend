@@ -136,7 +136,11 @@ io.on("connection", (socket) => {
       currentInterview.level
     );
     console.log('Next question ::', nextQuestion);
-    socket.emit("evaluation", evaluation);
+    socket.emit("evaluation", {
+      ...evaluation,
+      question: data.question,
+      answer: data.transcript
+    });
     // 🗑️ REMOVED: Separate text emit. Now bundled with audio.
 
     // ✅ STEP 3: Generate and send AI Audio

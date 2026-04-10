@@ -1,0 +1,83 @@
+name: Deploy Backend to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Create Deployment Package
+        run: tar -czf deploy.tar.gz dist package.json package-lock.json
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-package
+          path: deploy.tar.gz
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Build Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-package
+
+      - name: Copy package to EC2
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: "deploy.tar.gz"
+          target: ${{ secrets.EC2_TARGET_DIR }}
+
+      - name: Deploy on EC2
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd ${{ secrets.EC2_TARGET_DIR }}
+            
+            # Extract the package
+            tar -xzf deploy.tar.gz
+            rm deploy.tar.gz
+            
+            # Install production dependencies
+            npm install --omit=dev
+            
+            # Generate .env file
+            cat <<EOF > .env
+            PORT=5000
+            MONGODB_URI="${{ secrets.MONGODB_URI }}"
+            DEEPGRAM_API_KEY="${{ secrets.DEEPGRAM_API_KEY }}"
+            OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY }}"
+            EOF
+            
+            # Restart/Start the application with PM2
+            pm2 restart ai-interview-backend || pm2 start dist/index.js --name "ai-interview-backend"
+            
+            # Cleanup old builds
+            npm cache clean --force

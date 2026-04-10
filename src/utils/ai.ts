@@ -46,7 +46,7 @@ CONTEXT:
 
 INTERVIEW FLOW RULES:
 1. INTRODUCTION PHASE (MANDATORY):
-   - If history is COMPLETELY EMPTY, ask for a brief introduction (background, Laravel experience, projects).
+   - If history is COMPLETELY EMPTY, your first question MUST be a brief introduction (background, experience, and key projects).
    - If there is ANY history, assume the introduction is ALREADY DONE. DO NOT ask for an introduction again.
 2. TECHNICAL DEEP-DIVE (After introduction):
    - Progress from advanced → intermediate → basic (reverse pyramid to test depth early).
@@ -105,7 +105,7 @@ CONTEXT:
 
 INTERVIEW FLOW RULES:
 1. INTRODUCTION PHASE (MANDATORY):
-   - If history is COMPLETELY EMPTY, ask for a brief introduction (background, experience, projects).
+   - If history is COMPLETELY EMPTY, your first question MUST be a warm greeting followed by a request for a brief introduction (background, experience, and key projects).
    - If there is ANY history, assume the introduction is ALREADY DONE. DO NOT ask for an introduction again.
 2. TECHNICAL DEEP-DIVE (After introduction):
    - Progress from advanced → intermediate → basic (reverse pyramid to test depth early).
@@ -169,7 +169,7 @@ ${resumeText ? `- Candidate Resume: ${resumeText}` : "- No resume provided. Focu
 
 INTERVIEW FLOW RULES:
 1. FIRST QUESTION / INTRODUCTION:
-   - If history is EMPTY: Start with a warm greeting and ask for a self-introduction OR dive into a resume project.
+   - If history is EMPTY: Start with a warm greeting and explicitly ask for a self-introduction (covering background, experience, and projects).
    - If history is NOT EMPTY: DO NOT ask for an introduction. Move directly to technical or behavioral follow-ups.
 2. Follow-up Logic:
    - Progress from advanced → basic complexity.
