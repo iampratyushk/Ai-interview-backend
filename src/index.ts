@@ -22,6 +22,10 @@ const io = new Server(server, {
 app.use(cors());
 app.use(express.json());
 
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "ok", timestamp: new Date().toISOString() });
+});
+
 // MongoDB Connection
 mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost:27017/ai-interview")
   .then(() => console.log("MongoDB connected"))
