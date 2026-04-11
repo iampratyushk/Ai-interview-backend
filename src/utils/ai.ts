@@ -4,9 +4,15 @@ import dotenv from "dotenv";
 dotenv.config();
 
 // ✅ Initialize OpenRouter (OpenAI compatible)
+const apiKey = process.env.OPENROUTER_API_KEY || process.env.OPENAI_API_KEY;
+
+if (!apiKey) {
+  console.warn("⚠️ [AI] No API key found (OPENROUTER_API_KEY or OPENAI_API_KEY). Inference will fail.");
+}
+
 const openai = new OpenAI({
   baseURL: "https://openrouter.ai/api/v1",
-  apiKey: process.env.OPENROUTER_API_KEY,
+  apiKey: apiKey,
   defaultHeaders: {
     "HTTP-Referer": "http://localhost:5000", // Optional, for OpenRouter rankings
     "X-Title": "AI Interview Platform", // Optional, for OpenRouter rankings

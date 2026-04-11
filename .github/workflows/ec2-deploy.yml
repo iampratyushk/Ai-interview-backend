@@ -74,6 +74,7 @@ jobs:
             MONGODB_URI="${{ secrets.MONGODB_URI }}"
             DEEPGRAM_API_KEY="${{ secrets.DEEPGRAM_API_KEY }}"
             OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY }}"
+            OPENROUTER_API_KEY="${{ secrets.OPENROUTER_API_KEY || secrets.OPENAI_API_KEY }}"
             EOF
             
             # Restart/Start the application with PM2
@@ -81,3 +82,4 @@ jobs:
             
             # Cleanup old builds
             npm cache clean --force
+  
